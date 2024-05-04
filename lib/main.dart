@@ -1,4 +1,9 @@
+import 'package:dot_navigation_bar/dot_navigation_bar.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:ticket_booking_app/utilities/images.dart';
+import 'package:ticket_booking_app/widgets/reusableElevatedButton.dart';
 
 void main() {
   runApp(const MyApp());
@@ -11,115 +16,221 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home:  MyHomePage(),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+  const MyHomePage({super.key});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
-
+  bool _isActive = true;
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
+      backgroundColor: Colors.black,
+      body: Padding(
+        padding:  EdgeInsets.only(right: 0,left: 0),
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
+          children: [
+            SizedBox(
+              height: 70,
             ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            Center(
+              child: Text(
+                'Your tickets',
+                style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.w700,
+                fontSize: 32,
+              ),
+              ),
             ),
+           SizedBox(
+             height: 20,
+           ),
+           Row(
+             mainAxisAlignment: MainAxisAlignment.center,
+             children: [
+               GestureDetector(
+                 onTap: (){
+                   setState(() {
+                     _isActive = true; // Toggle image state on tap
+                   });
+                 },
+                 child: Image(
+                     image: _isActive ? upcomingButtonActive : upcomingButtonInActive
+                 ),
+               ),
+               SizedBox(width: 5,),
+               GestureDetector(
+                 onTap: (){
+                   setState(() {
+                     _isActive = false;
+                   });
+                 },
+                 child: Image(
+                     image: !_isActive ? historyButtonActive : historyButtonInactive
+                 ),
+               ),
+             ],
+           ),
+            SizedBox(
+              height: 20,
+            ),
+            _isActive ? Image(
+                image: upcomingSwictherInitialImage,
+            ) : HistoryPageView(),
+            SizedBox(
+              height: 20,
+            ),
+            _isActive ? Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Image(
+                  image: downloadButton,
+                ),
+                Image(
+                  image: shareButton,
+                ),
+              ],
+            ) : SizedBox(),
+            SizedBox(
+              height: 20,
+            ),
+            // Expanded(
+            //   child: Container(
+            //     height: 80,
+            //     child: Padding(
+            //       padding: EdgeInsets.only(bottom: 30, top: 0),
+            //       child: ClipRRect(
+            //         borderRadius: BorderRadius.circular(10.0),
+            //         child: BottomNavigationBar(
+            //           items: [
+            //             BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+            //             BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
+            //             BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+            //           ],
+            //           backgroundColor: Color.fromRGBO(31,31,31,1),
+            //           fixedColor: Colors.white,
+            //           onTap: (index) {
+            //             // Handle navigation based on the tapped index
+            //             if (index == 0) {
+            //               // Navigate to the home screen
+            //             } else if (index == 1) {
+            //               // Navigate to the settings screen
+            //             }
+            //           },
+            //         ),
+            //       ),
+            //     ),
+            //   ),
+            // ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      // bottomNavigationBar:
+      // Container(
+      //   child: Padding(
+      //     padding:  EdgeInsets.only(left: 16,right: 16),
+      //     child: ClipRRect(
+      //       borderRadius: BorderRadius.circular(20.0),
+      //       child: BottomNavigationBar(
+      //         items: [
+      //           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+      //           BottomNavigationBarItem(icon: Icon(Icons.settings), label: ''),
+      //           BottomNavigationBarItem(icon: Icon(Icons.home), label: ''),
+      //         ],
+      //         backgroundColor: Color.fromRGBO(31,31,31,1),
+      //         fixedColor: Colors.white,
+      //         onTap: (index) {
+      //           // Handle navigation based on the tapped index
+      //           if (index == 0) {
+      //             // Navigate to the home screen
+      //           } else if (index == 1) {
+      //             // Navigate to the settings screen
+      //           }
+      //         },
+      //       ),
+      //     ),
+      //   ),
+      // ),
+    );
+  }
+}
+
+class HistoryPageView extends StatelessWidget {
+  const HistoryPageView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Stack(
+        alignment: AlignmentDirectional.centerStart,
+        children: [
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              bottom: 420,
+              child: Image(
+                  image: ticket1)
+          ),
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              bottom: 287,
+              child: Image(
+                  image: ticket2)
+          ),
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              bottom: 155,
+              child: Image(
+                  image: ticket3)
+          ),
+
+          Positioned(
+              left: 0.0,
+              top: 0.0,
+              right: 0.0,
+              bottom: 65,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  SizedBox(height: 50), // Adjust the value as needed
+                  Image(image: ticket4),
+                ],
+              ),),
+          Positioned(
+            left: 0.0,
+            top: 0.0,
+            right: 0.0,
+            bottom: 0.0,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                SizedBox(height: 50), // Adjust the value as needed
+                Image(image: ticket5),
+              ],
+            ),),
+        ],
+      ),
     );
   }
 }
